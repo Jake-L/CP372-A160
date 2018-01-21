@@ -1,1 +1,30 @@
-CP372 A1
+CP372 A1 Group 60
+Request for Comments
+
+Jake Loftus
+Richard Hugessen
+January 2018
+
+CP372 Assignment 1
+
+Status of this Memo
+
+  This memo provides information for users or evaluators of our program. It is technical in nature, and gives the reader insight into the specifics of our program works. 
+
+Abstract
+
+  This document describes the detailed functionality of the program. Our program includes a server-client connection, and here we describe our protocol and format of messages. It also details server specific functionality, such as request synchronization policies. The client and server reactions to various errors and border-cases are described as well. 
+
+Table of Contents
+
+  1. Overview
+  2. Compiling and running the program
+    3.1 Compiling
+    3.2 Running server
+    3.3 Running clients
+	3. Protocol Description
+	4. Format of Messages
+	5. Synchonization Policies
+	6. Error Handling
+	7. Border-case Behaviour
+	8. Data Structures

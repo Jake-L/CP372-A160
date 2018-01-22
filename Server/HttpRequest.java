@@ -30,19 +30,20 @@ final class HttpRequest implements Runnable
 	{
 		// Get a reference to the socket's input and output streams.
 		System.out.println("processing client request");
-		InputStream is = socket.getInputStream();
-		DataOutputStream os = new DataOutputStream(socket.getOutputStream());
+
+		// read from the client
+		Scanner input = new Scanner(socket.getInputStream());
 		
-		// these two lines are just for testing
+		// write to the client
 		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		out.println("connected to server");
-		
-		// Set up input stream filters.
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
 		// Get the request line of the HTTP request message.
-		String requestLine = br.readLine();
+		String requestLine = input.readLine();
 
+		out.println("Request type: " + requestLine);
+		System.out.println("Request type: " + requestLine);
+/*
 		// Extract the filename from the request line.
 		StringTokenizer tokens = new StringTokenizer(requestLine);
 		tokens.nextToken();  // skip over the method, which should be "GET"
@@ -106,11 +107,11 @@ final class HttpRequest implements Runnable
 		else 
 		{
 	    os.writeBytes(entityBody) ;
-    }
+    }*/
 
 		// Close streams and socket.
-		os.close();
-		br.close();
+		input.close();
+		out.close();
 		socket.close();
 	}
 

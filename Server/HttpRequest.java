@@ -38,11 +38,15 @@ final class HttpRequest implements Runnable
 		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		out.println("connected to server");
 
-		// Get the request line of the HTTP request message.
-		String requestLine = input.readLine();
+		// Get the request line of the HTTP request message
+		String requestLine;
 
-		out.println("Request type: " + requestLine);
-		System.out.println("Request type: " + requestLine);
+		while (input.hasNextLine())
+		{
+			requestLine = input.nextLine();
+			out.println("Request recieved: " + requestLine);
+			System.out.println("Request recieved: " + requestLine);
+		}
 /*
 		// Extract the filename from the request line.
 		StringTokenizer tokens = new StringTokenizer(requestLine);

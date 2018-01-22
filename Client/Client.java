@@ -10,17 +10,18 @@ public final class Client
 		int port = 5555;
 		
 		// Get the server address from the user
-		String host = "10.133.181.231";
+		
+		String host = InetAddress.getLocalHost().getHostAddress();//"10.84.98.43";
 		
 		Socket socket = null;
 		PrintWriter out = null;
-		BufferedReader in = null;
+		Scanner in = null;
 
 		try 
 		{
 				socket = new Socket(host, port);
 				out = new PrintWriter(socket.getOutputStream(), true);
-				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				in = new Scanner(socket.getInputStream());
 		} 
 		catch (UnknownHostException e) 
 		{
@@ -33,28 +34,29 @@ public final class Client
 				System.exit(1);
 		}
 
-		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+		Scanner keyboardIn = new Scanner(System.in);
 		String fromServer;
 		String fromUser;
 		
 		System.out.println("Connected to server");
 
-		while ((fromServer = in.readLine()) != null) 
+		while (in.hasNextLine()) 
 		{
+			fromServer = in.nextLine();
 			System.out.println("Server: " + fromServer);
 	
-			fromUser = stdIn.readLine();
+			fromUser = keyboardIn.nextLine();
 			
 			if (fromUser != null) 
 			{
 				System.out.println("Client: " + fromUser);
-				out.println(fromUser);
+				out.println(fromUser + "\ntestline2");
 			}
 		}
 
 		out.close();
 		in.close();
-		stdIn.close();
+		keyboardIn.close();
 		socket.close();
 	}
 }

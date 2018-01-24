@@ -19,15 +19,18 @@ Table of Contents
 
   1. Overview
   2. Compiling and running the program
-    3.1 Compiling
-    3.2 Running server
-    3.3 Running clients
+    2.1 Compiling
+    2.2 Running server
+    2.3 Running clients
 	3. Protocol Description
 	4. Format of Messages
-	5. Synchonization Policies
-	6. Error Handling
-	7. Border-case Behaviour
-	8. Data Structures
+	5. Data Structures
+	6. Synchronization Policies
+	7. Error Handling
+	8. Border-case Behaviour
+	
+5. Data Structures
+The books will be represented by a book class object. All of the book objects will be stored within a Hash Map
 
-5.
-- concurrentHashMap
+6. Synchronization Policies
+This program uses Java's ConcurrentHashMap data structure to store the book objects. The ConcurrentHashMap only allows one PUT operation to run at a time, and does not restrict the use of GET operations. 

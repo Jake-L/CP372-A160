@@ -13,21 +13,29 @@ Status of this Memo
 
 Abstract
 
-  This document describes the detailed functionality of the program. Our program includes a server-client connection, and here we describe our protocol and format of messages. It also details server specific functionality, such as request synchronization policies. The client and server reactions to various errors and border-cases are described as well. 
+  The program includes a server-client system. The server stores a list of books, entered by the user. The user can then update, delete, and retrieve these books. 
 
 Table of Contents
 
-  1. Overview
-  2. Compiling and running the program
-    2.1 Compiling
-    2.2 Running server
-    2.3 Running clients
+  1. Introduction
+		1.1 Terminology
 	3. Protocol Description
 	4. Format of Messages
-	5. Data Structures
 	6. Synchronization Policies
 	7. Error Handling
 	8. Border-case Behaviour
+
+1. Introduction
+
+  This document describes the detailed functionality of the program. Our program includes a server-client connection, and here we describe our protocol and format of messages. It also details server specific functionality, such as request synchronization policies. The client and server reactions to various errors and border-cases are described as well.
+
+1.1 Terminology
+
+	Client: The user-facing component of the program, which takes input from the user and submits the request to the server.
+	
+	Server: The component that recieves requests from the client and performs the specified operations. It also maintains a record of the books entered by the client for the duration of its operation.
+	
+	Request: A message sent from the client to the server, which specifies an operation for the server to perform. 
 	
 3. Protocol Description
 This program follows a request/response protocol. The server is static, and takes no action until a request is recieved. Once the client submits a request, the server will handle it and respond appropriately. Then once the client recieves the response, it displays it to the user. 

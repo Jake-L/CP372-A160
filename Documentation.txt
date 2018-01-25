@@ -29,8 +29,16 @@ Table of Contents
 	7. Error Handling
 	8. Border-case Behaviour
 	
+3. Protocol Description
+This program follows a request/response protocol. The server is static, and takes no action until a request is recieved. Once the client submits a request, the server will handle it and respond appropriately. Then once the client recieves the response, it displays it to the user. 
+	
 5. Data Structures
 The books will be represented by a book class object. All of the book objects will be stored within a Hash Map
 
 6. Synchronization Policies
 This program uses Java's ConcurrentHashMap data structure to store the book objects. The ConcurrentHashMap only allows one PUT operation to run at a time, and does not restrict the use of GET operations. 
+
+7. Error Handling
+The client implements preventative techniques to reduce the number of errors occuring. Rather than letting the user manually type in the requests, which may not follow the proper format, the client provides a structured form for the user to fill in. After the user has entered an ISBN, the client will validate it to ensure it is a proper ISBN. Then when the user submits the request, the client will use their input to assemble a properly formatted request and send it to the server. If the user attempts to create a GET or UPDATE request without entering an ISBN, the client will display an error message stating that the request must include an ISBN. Having the client format the request greatly reduces the potential for errors, however there are still a few cases where an error could occur. If the user attempts to SUBMIT a book with an ISBN that is already included in the server's records, the server will return an error. The client will handle this error by displaying a message to the user telling them that the ISBN is already in use.
+
+If the client fails to connect to the server, an error message will be displayed instructing them to check their internet connection or try another port. 

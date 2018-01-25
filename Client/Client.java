@@ -48,27 +48,27 @@ public final class Client
 	
 			fromUser = keyboardIn.nextLine();
 
-			if (fromUser == "1")
+			if (fromUser.contains("1"))
 			{
 				out.println("SUBMIT\nISBN 9783161484100\nTITLE Modular Algorithms\nAUTHOR Gerhard\nPUBLISHER Mir");
 			}
-			else if (fromUser == "2")
+			else if (fromUser.contains("2"))
 			{
 				out.println("UPDATE\nISBN 9783161484100\nYEAR 2004\nPUBLISHER Springer");
 			}
-			else if (fromUser == "3")
+			else if (fromUser.contains("3"))
 			{
 				out.println("GET\nAUTHOR Gerhard");
 			}
-			else if (fromUser == "4")
+			else if (fromUser.contains("4"))
 			{
 				out.println("GET\nALL");
 			}
-			else if (fromUser == "5")
+			else if (fromUser.contains("5"))
 			{
 				out.println("SUBMIT\nISBN 9780785195368\nTITLE Daredevil\nAUTHOR Gerhard\nPUBLISHER Marvel");
 			}
-			else if (fromUser == "6")
+			else if (fromUser.contains("6"))
 			{
 				out.println("REMOVE\nAUTHOR Gerhard");
 			}

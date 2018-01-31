@@ -332,7 +332,7 @@ public class Client
 			in = new Scanner(socket.getInputStream());
 
 			// send the request to the server
-			out.println(request);
+			out.println(request + "\nSTOP");
 			System.out.println("Submitting request" + request);
 			
 

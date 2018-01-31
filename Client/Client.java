@@ -258,7 +258,7 @@ public class Client
 
 			if (isValidIsbn(isbnTextField.getText().trim().replaceAll("\\-","")))
 			{
-				request += "\n" + isbnTextField.getText();
+				request += "\nISBN " + isbnTextField.getText();
 				isValid = true;
 			}
 			else
@@ -276,13 +276,13 @@ public class Client
 
 		if (authorTextField.getText() != null && !authorTextField.getText().isEmpty())
 		{
-			request += "\n" + authorTextField.getText();
+			request += "\nAUTHOR " + authorTextField.getText();
 			isValid = true;
 		}
 
 		if (titleTextField.getText() != null && !titleTextField.getText().isEmpty())
 		{
-			request += "\n" + titleTextField.getText();
+			request += "\nTITLE " + titleTextField.getText();
 			isValid = true;
 		}
 
@@ -290,7 +290,7 @@ public class Client
 		{
 			if (isInteger(yearTextField.getText()) && yearTextField.getText().trim().length() <= 4 && Integer.parseInt(yearTextField.getText()) <= 2018)
 			{
-				request += "\n" + yearTextField.getText();
+				request += "\nYEAR " + yearTextField.getText();
 				isValid = true;
 			}
 			else
@@ -302,7 +302,7 @@ public class Client
 
 		if (publisherTextField.getText() != null && !publisherTextField.getText().isEmpty())
 		{
-			request += "\n" + publisherTextField.getText();
+			request += "\nPUBLISHER " + publisherTextField.getText();
 			isValid = true;
 		}
 

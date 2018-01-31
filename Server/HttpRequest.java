@@ -1,16 +1,19 @@
 import java.io.* ;
 import java.net.* ;
 import java.util.* ;
+import java.util.concurrent.ConcurrentHashMap;
 
 final class HttpRequest implements Runnable 
 {
 	final static String CRLF = "\r\n";
 	Socket socket;
+	ConcurrentHashMap<String, Book> books;
 	
 	// Constructor
-	public HttpRequest(Socket socket) throws Exception 
+	public HttpRequest(Socket socket, ConcurrentHashMap<String,Book> books) throws Exception 
 	{
 		this.socket = socket;
+		this.books = books;
 	}
 	
 	// Implement the run() method of the Runnable interface.
@@ -38,82 +41,30 @@ final class HttpRequest implements Runnable
 		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		out.println("connected to server");
 
-		// Get the request line of the HTTP request message
-		String requestLine;
-
-		while (input.hasNextLine())
+		// Get the request line of the HTTP request message.
+		String operation = input.nextLine();
+		Book book = new Book();
+		
+		System.out.println("Operation: " + operation);
+		ArrayList<String> allTokens = new ArrayList<String>();
+		
+		String requestLine = input.nextLine();
+		
+		while (!requestLine.equals("END"))
 		{
-			requestLine = input.nextLine();
 			out.println("Request recieved: " + requestLine);
 			System.out.println("Request recieved: " + requestLine);
+			String[] tokens = requestLine.split(" ");
+			book.fields.put(tokens[0], tokens[1]);
+			allTokens.add(tokens[0]);
+			requestLine = input.nextLine();
 		}
-/*
-		// Extract the filename from the request line.
-		StringTokenizer tokens = new StringTokenizer(requestLine);
-		tokens.nextToken();  // skip over the method, which should be "GET"
-		String fileName = tokens.nextToken();
-
-		// Prepend a "." so that file request is within the current directory.
-		fileName = "." + fileName ;
-	
-		// Open the requested file.
-		FileInputStream fis = null ;
-		boolean fileExists = true ;
-    try 
-		{
-	    fis = new FileInputStream(fileName);
-    } 
-		catch (FileNotFoundException e) 
-		{
-	    fileExists = false ;
-    }
-
-		// Debug info for private use
-		System.out.println("Incoming!!!");
-		System.out.println(requestLine);
-		String headerLine = null;
 		
-		while ((headerLine = br.readLine()).length() != 0) {
-	    System.out.println(headerLine);
+		System.out.println("Doing things");
+		for (String k:allTokens) {
+			System.out.println(String.format("%s: %s", k, book.fields.get(k)));
 		}
-	
-		// Construct the response message.
-		String statusLine = null;
-		String contentTypeLine = null;
-		String entityBody = null;
-		if (fileExists) 
-		{
-			statusLine = "HTTP/1.0 200 OK" + CRLF;
-	    contentTypeLine = "Content-Type: " + 
-			contentType(fileName) + CRLF;
-    } 
-		else 
-		{
-	    statusLine = "HTTP/1.0 404 Not Found" + CRLF;
-	    contentTypeLine = "Content-Type: text/html" + CRLF;
-	    entityBody = "<HTML><HEAD><TITLE>Not Found</TITLE></HEAD><BODY>Not Found</BODY></HTML>";
-    }
-		// Send the status line.
-		os.writeBytes(statusLine);
 
-		// Send the content type line.
-		os.writeBytes(contentTypeLine);
-
-		// Send a blank line to indicate the end of the header lines.
-		os.writeBytes(CRLF);
-
-		// Send the entity body.
-		if (fileExists) 
-		{
-	    sendBytes(fis, os);
-	    fis.close();
-    } 
-		else 
-		{
-	    os.writeBytes(entityBody) ;
-    }*/
-
-		// Close streams and socket.
 		input.close();
 		out.close();
 		socket.close();

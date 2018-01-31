@@ -125,16 +125,6 @@ private void processRequest() throws Exception
 		return "application/octet-stream" ;
   }
   
-  private void updateBook(String isbn, Scanner input) throws IllegalArgumentException {
-	  Book book = 
-  }
-  
-  private void submitBook(String isbn, Scanner input) {
-	  Book book = new Book();
-
-	  this.books.put(isbn, book);
-  }
-  
   private Book addOrUpdateFields(Book book, Scanner input) {
 	  String requestLine = input.nextLine();
 	  while (!requestLine.equals("STOP")) {

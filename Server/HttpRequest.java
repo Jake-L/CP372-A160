@@ -84,7 +84,7 @@ private void processRequest() throws Exception
 		else if (operation.equals("UPDATE")) {
 			String[] isbn = requestLine.split(" ");
 			if (isbn.length == 2) {
-				addOrUpdateFields(this.books.get(isbn[1]),input);
+				this.books.put(isbn[1],addOrUpdateFields(this.books.get(isbn[1]),input));
 				out.println("SUCCESS");
 			}
 			else

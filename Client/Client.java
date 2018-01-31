@@ -32,6 +32,8 @@ public class Client
 	private static JTextField titleTextField;
 	private static JTextField yearTextField;
 	private static JTextField publisherTextField;
+	private static JCheckBox bibtexOption;
+	private static JCheckBox getAllOption;
 
 	private static void openGUI()
 	{
@@ -65,6 +67,51 @@ public class Client
         frame.add(optionUpdate);
         frame.add(optionGet);
         frame.add(optionRemove);
+
+        optionSubmit.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                {
+                	isbnTextField.setEnabled(true);
+					authorTextField.setEnabled(true);
+					titleTextField.setEnabled(true);
+					yearTextField.setEnabled(true);
+					publisherTextField.setEnabled(true);
+					getAllOption.setSelected(false);
+				}
+            }
+        });
+
+        optionUpdate.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                {
+                	isbnTextField.setEnabled(true);
+					authorTextField.setEnabled(true);
+					titleTextField.setEnabled(true);
+					yearTextField.setEnabled(true);
+					publisherTextField.setEnabled(true);
+					getAllOption.setSelected(false);
+				}
+            }
+        });
+
+        optionRemove.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                {
+                	isbnTextField.setEnabled(true);
+					authorTextField.setEnabled(true);
+					titleTextField.setEnabled(true);
+					yearTextField.setEnabled(true);
+					publisherTextField.setEnabled(true);
+					getAllOption.setSelected(false);
+				}
+            }
+        });
 
         // Input field for the ISBN
         JLabel isbnLabel = new JLabel("13 digit ISBN:");
@@ -105,6 +152,43 @@ public class Client
         publisherTextField.setBounds(140, 190, 150, 20);
         frame.getContentPane().add(publisherLabel);
         frame.getContentPane().add(publisherTextField);
+
+        JLabel bibtexLabel = new JLabel("bibtex format?");
+        bibtexLabel.setBounds(20, 220, 100, 20);
+        bibtexOption = new JCheckBox();
+        bibtexOption.setBounds(140, 220, 20, 20);
+        frame.getContentPane().add(bibtexLabel);
+        frame.getContentPane().add(bibtexOption);
+
+        JLabel getAllLabel = new JLabel("GET ALL");
+        getAllLabel.setBounds(20, 250, 100, 20);
+        getAllOption = new JCheckBox();
+        getAllOption.setBounds(140, 250, 20, 20);
+        frame.getContentPane().add(getAllLabel);
+        frame.getContentPane().add(getAllOption);
+        getAllOption.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                {
+                	isbnTextField.setEnabled(false);
+					authorTextField.setEnabled(false);
+					titleTextField.setEnabled(false);
+					yearTextField.setEnabled(false);
+					publisherTextField.setEnabled(false);
+					optionGet.setSelected(true);
+                }
+                else
+                {
+                	isbnTextField.setEnabled(true);
+					authorTextField.setEnabled(true);
+					titleTextField.setEnabled(true);
+					yearTextField.setEnabled(true);
+					publisherTextField.setEnabled(true);
+                }
+            }
+        });
 
         // button to submit request
         JButton submitButton = new JButton();
@@ -148,7 +232,16 @@ public class Client
 		}
 		else if (optionGet.isSelected())
 		{
-			request = "GET";
+			if (getAllOption.isSelected())
+			{
+				request = "GET ALL";
+				errorLabel.setText("Request submitted");
+				submitRequest(request);
+			}
+			else
+			{
+				request = "GET";
+			}
 		}
 		else if (optionRemove.isSelected())
 		{
@@ -163,7 +256,7 @@ public class Client
 		if (isbnTextField.getText() != null && !isbnTextField.getText().isEmpty())
 		{
 
-			if (isbnTextField.getText().trim().length() == 13 && isInteger(isbnTextField.getText().trim()))
+			if (isValidIsbn(isbnTextField.getText().trim().replaceAll("\\-","")))
 			{
 				request += "\n" + isbnTextField.getText();
 				isValid = true;
@@ -252,13 +345,22 @@ public class Client
 				{
 					errorLabel.setText("Server processed request successfully!");
 					System.out.println("Ending connection");
+
+					if (bibtexOption.isSelected())
+					{
+						openGetResponseBibtex(fromServer);
+					}
+					else
+					{
+						openGetResponse(fromServer);
+					}
+
 					break;
 				}
 				else
 				{
 					fromServer += temp;
 				}
-				
 			}
 
 			out.close();
@@ -279,20 +381,41 @@ public class Client
 	{
 		JFrame frame = new JFrame("GET Results");
 		frame.getContentPane().setLayout(null);
-
-		//setBounds(x, y, width, height)
 		frame.setBounds(500,200,400,400);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
         // create table to hold the data
         JTable table = new JTable(20, 2);
-        //table.setBounds(50, 50, 300, 300);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         // create scroll bar for the table
         JScrollPane scroll = new JScrollPane(table);
         scroll.setBounds(50, 50, 300, 300);
         frame.getContentPane().add(scroll);
+
+        //Display the window.
+        frame.setVisible(true);
+	}
+
+	private static void openGetResponseBibtex(String response)
+	{
+		JFrame frame = new JFrame("GET Results");
+		frame.getContentPane().setLayout(null);
+		frame.setBounds(500,200,400,400);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
+	    // create the text area
+	    JTextArea display = new JTextArea(16, 58);
+	    display.setText(response);
+	    display.setEditable(false); // set textArea non-editable
+	    display.setLineWrap(true);
+		display.setWrapStyleWord(true);
+
+	    // create scroll bar for the text area
+	    JScrollPane scroll = new JScrollPane(display);
+	    //scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	    scroll.setBounds(50, 50, 300, 300);
+	    frame.getContentPane().add(scroll);	
 
         //Display the window.
         frame.setVisible(true);
@@ -315,5 +438,32 @@ public class Client
 		{
 			return false;
 		}
+	}
+
+	private static boolean isValidIsbn(String isbn)
+	{
+		if (isInteger(isbn) && isbn.length() == 13)
+		{
+			int checksum = 0;
+
+			for (int i = 0; i < isbn.length(); i++)
+			{
+				if (i % 2 == 0)
+				{
+					checksum += Character.getNumericValue(isbn.charAt(i));
+				}
+				else
+				{
+					checksum += 3 * Character.getNumericValue(isbn.charAt(i));
+				}
+			}
+
+			if (checksum % 10 == 0)
+			{
+				return true;
+			}       
+		}
+
+		return false;
 	}
 }

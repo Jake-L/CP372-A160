@@ -29,7 +29,8 @@ final class HttpRequest implements Runnable
 		}
 	}
 
-  private void processRequest() throws Exception 
+  @SuppressWarnings("resource")
+private void processRequest() throws Exception 
 	{
 		// Get a reference to the socket's input and output streams.
 		System.out.println("processing client request");
@@ -39,32 +40,58 @@ final class HttpRequest implements Runnable
 		
 		// write to the client
 		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-		out.println("connected to server");
+		out.println("Connection established");
 
 		// Get the request line of the HTTP request message.
 		String operation = input.nextLine();
-		Book book = new Book();
 		
 		System.out.println("Operation: " + operation);
-		ArrayList<String> allTokens = new ArrayList<String>();
 		
 		String requestLine = input.nextLine();
 		
-		while (!requestLine.equals("END"))
-		{
-			out.println("Request recieved: " + requestLine);
-			System.out.println("Request recieved: " + requestLine);
-			String[] tokens = requestLine.split(" ");
-			book.fields.put(tokens[0], tokens[1]);
-			allTokens.add(tokens[0]);
-			requestLine = input.nextLine();
+		if (operation.equals("GET ALL")) {
+			String result = "";
+			for(String key:this.books.keySet())
+				result += this.books.get(key).toString();
+			out.println(result + "\nSUCCESS");
+		}
+		else if (operation.equals("GET")) {
+			String[] isbn = requestLine.split(" ");
+			if (isbn.length == 2)
+				out.println(this.books.get(isbn[1]).toString() + "\nSUCCESS");
+			else 
+				throw new IllegalArgumentException("Must be in format \"ISBN nnnnn\"");
+		}
+		else if (operation.equals("SUBMIT")) {
+			String[] isbn = requestLine.split(" ");
+			if (isbn.length == 2) {
+				Book book = addOrUpdateFields(new Book(),input);
+				this.books.put(isbn[1],book);
+				out.println("SUCCESS");
+			}
+			else
+				throw new IllegalArgumentException("Must be in format \"ISBN nnnnn\"");
+		}
+		else if (operation.equals("REMOVE")) {
+			String[] isbn = requestLine.split(" ");
+			if (isbn.length == 2) {
+				this.books.remove(isbn[1]);
+				out.println("SUCCESS");
+			}
+			else 
+				throw new IllegalArgumentException("Must be in format \"ISBN nnnnn\"");
+		}
+		else if (operation.equals("UPDATE")) {
+			String[] isbn = requestLine.split(" ");
+			if (isbn.length == 2) {
+				this.books.put(isbn[1],addOrUpdateFields(this.books.get(isbn[1]),input));
+				out.println("SUCCESS");
+			}
+			else
+				throw new IllegalArgumentException("Must be in format \"ISBN nnnnn\"");
 		}
 		
-		System.out.println("Doing things");
-		for (String k:allTokens) {
-			System.out.println(String.format("%s: %s", k, book.fields.get(k)));
-		}
-
+		out.println("SUCCESS");
 		input.close();
 		out.close();
 		socket.close();
@@ -96,6 +123,19 @@ final class HttpRequest implements Runnable
 		}
 		
 		return "application/octet-stream" ;
+  }
+  
+  private Book addOrUpdateFields(Book book, Scanner input) {
+	  String requestLine = input.nextLine();
+	  while (!requestLine.equals("STOP")) {
+		  String[] tokens = requestLine.split(" ");
+		  if (tokens.length == 2)
+			  book.fields.put(tokens[0], tokens[1]);
+		  else
+			  throw new IllegalArgumentException("The body of your submit request is formatted incorrectly");
+		  requestLine = input.nextLine();
+	  }
+	  return book;
   }
 }
 

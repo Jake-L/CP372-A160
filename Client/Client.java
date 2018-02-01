@@ -2,6 +2,7 @@ import java.io.* ;
 import java.net.* ;
 import java.util.* ;
 import javax.swing.*; 
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -377,27 +378,45 @@ public class Client
 		}
 	}
 
-	private static void openGetResponse(String response)
+	private static void openGetResponse(String r)
 	{
 		JFrame frame = new JFrame("GET Results");
-		frame.getContentPane().setLayout(null);
-		frame.setBounds(500,200,400,400);
+		frame.getContentPane().setLayout(new BorderLayout());
+		frame.setBounds(500,200,600,400);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
+        String[] columns = {"ISBN", "Title", "Author", "Publisher", "Year"};
+ 		int[] columnWidth = {50, 50, 50, 80, 50};
+ 		Object[][] data = getDataFromResponse(r);
+
         // create table to hold the data
-        JTable table = new JTable(20, 2);
+        JTable table = new JTable(data, columns);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
+        for (int i = 0; i < table.getRowCount(); i++)
+        {
+        	for (int j = 0; j < table.getColumnCount(); j++)
+        	{
+        		TableCellRenderer render = table.getCellRenderer(i, j);
+	            Component c = table.prepareRenderer(render, i, j);
+	            columnWidth[j] = Math.max(c.getPreferredSize().width + 4, columnWidth[j]);
+        	}
+        }
+
+        for (int j = 0; j < table.getColumnCount(); j++)
+        {
+        	table.getColumnModel().getColumn(j).setPreferredWidth(columnWidth[j]);
+        }
+
         // create scroll bar for the table
-        JScrollPane scroll = new JScrollPane(table);
-        scroll.setBounds(50, 50, 300, 300);
+        JScrollPane scroll = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         frame.getContentPane().add(scroll);
 
         //Display the window.
         frame.setVisible(true);
 	}
 
-	private static void openGetResponseBibtex(String response)
+	private static void openGetResponseBibtex(String r)
 	{
 		JFrame frame = new JFrame("GET Results");
 		frame.getContentPane().setLayout(null);
@@ -406,7 +425,6 @@ public class Client
 
 	    // create the text area
 	    JTextArea display = new JTextArea(16, 58);
-	    display.setText(response);
 	    display.setEditable(false); // set textArea non-editable
 	    display.setLineWrap(true);
 		display.setWrapStyleWord(true);
@@ -417,8 +435,88 @@ public class Client
 	    scroll.setBounds(50, 50, 300, 300);
 	    frame.getContentPane().add(scroll);	
 
+	    String[] columns = {"ISBN", "Title", "Author", "Publisher", "Year"};
+	    Object[][] data = getDataFromResponse(r);
+
+	    for (int i = 0; i < data.length; i++)
+	    {
+	    	String code = "";
+	    	if (data[i][2] != null)
+	    	{
+	    		code = data[i][2].toString().split(" ")[0];
+	    	}
+	    	if (data[i][4] != null)
+	    	{
+	    		code += data[i][4];
+	    	}
+	    	display.append("@book {" + code + "\n");
+
+	    	for (int j = 0; j < data[i].length; j++)
+	    	{
+	    		if (data[i][j] != null)
+	    		{
+	    			display.append(columns[j] + " = {" + data[i][j] + "},\n");
+	    		}
+	    	}
+
+	    	display.append("]\n\n");
+	    }
+
         //Display the window.
         frame.setVisible(true);
+	}
+
+	private static Object[][] getDataFromResponse(String r)
+	{
+        String[] response = r.split("\n");
+
+        // count the number of records, to know how big to make the table
+        int n = 0;
+        for (int i = 0; i < response.length; i++)
+        {
+        	String[] tokens = response[i].split(" ");
+        	System.out.println(tokens[0]);
+        	if (tokens[0].equals("ISBN"))
+        	{
+	        	n++;
+	        }
+	    }
+
+        Object[][] data = new Object[n][5];
+        n = 0;
+
+        for (int i = 0; i < response.length; i++)
+        {
+        	String[] tokens = response[i].split(" ");
+
+        	if (tokens[0].equals("ISBN"))
+        	{
+        		if (i > 0)
+        		{
+	        		n++;
+	        	}
+
+	        	data[n][0] = tokens[1];
+        	}
+        	else if (tokens[0].equals("TITLE"))
+        	{
+        		data[n][1] = tokens[1];
+        	}
+        	else if (tokens[0].equals("AUTHOR"))
+        	{
+        		data[n][2] = tokens[1];
+        	}
+        	else if (tokens[0].equals("PUBLISHER"))
+        	{
+        		data[n][3] = tokens[1];
+        	}
+        	else if (tokens[0].equals("YEAR"))
+        	{
+        		data[n][4] = tokens[1];
+        	}
+        }
+
+        return data;
 	}
 
 	private static boolean isInteger(String s)

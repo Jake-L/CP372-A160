@@ -165,16 +165,16 @@ public class Client
         frame.getContentPane().add(publisherTextField);
 
         JLabel bibtexLabel = new JLabel("bibtex format?");
-        bibtexLabel.setBounds(20, 220, 100, 20);
+        bibtexLabel.setBounds(20, 215, 100, 20);
         bibtexOption = new JCheckBox();
-        bibtexOption.setBounds(140, 220, 20, 20);
+        bibtexOption.setBounds(140, 215, 20, 20);
         frame.getContentPane().add(bibtexLabel);
         frame.getContentPane().add(bibtexOption);
 
         JLabel getAllLabel = new JLabel("GET ALL");
-        getAllLabel.setBounds(20, 250, 100, 20);
+        getAllLabel.setBounds(20, 240, 100, 20);
         getAllOption = new JCheckBox();
-        getAllOption.setBounds(140, 250, 20, 20);
+        getAllOption.setBounds(140, 240, 20, 20);
         frame.getContentPane().add(getAllLabel);
         frame.getContentPane().add(getAllOption);
         getAllOption.addItemListener(new ItemListener() {
@@ -203,18 +203,18 @@ public class Client
 
         // Input field for the host
         JLabel hostLabel = new JLabel("Host:");
-        hostLabel.setBounds(20, 280, 100, 20);
+        hostLabel.setBounds(20, 270, 50, 20);
         hostTextField = new JTextField();
-        hostTextField.setBounds(140, 280, 150, 20);
+        hostTextField.setBounds(75, 270, 120, 20);
         hostTextField.setText(host);
         frame.getContentPane().add(hostLabel);
         frame.getContentPane().add(hostTextField);
 
         // Input field for the port
         JLabel portLabel = new JLabel("Port:");
-        portLabel.setBounds(20, 310, 100, 20);
+        portLabel.setBounds(250, 270, 50, 20);
         portTextField = new JTextField();
-        portTextField.setBounds(140, 310, 150, 20);
+        portTextField.setBounds(305, 270, 50, 20);
         portTextField.setText(Integer.toString(port));
         frame.getContentPane().add(portLabel);
         frame.getContentPane().add(portTextField);

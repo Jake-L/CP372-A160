@@ -18,6 +18,14 @@ public class Client
 	{
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+            	try
+            	{
+            		host = InetAddress.getLocalHost().getHostAddress();
+            	}
+            	catch (UnknownHostException e)
+            	{
+
+            	}
 				openGUI();
 			}
 		});
@@ -33,6 +41,8 @@ public class Client
 	private static JTextField titleTextField;
 	private static JTextField yearTextField;
 	private static JTextField publisherTextField;
+	private static JTextField portTextField;
+	private static JTextField hostTextField;
 	private static JCheckBox bibtexOption;
 	private static JCheckBox getAllOption;
 
@@ -191,6 +201,24 @@ public class Client
             }
         });
 
+        // Input field for the host
+        JLabel hostLabel = new JLabel("Host:");
+        hostLabel.setBounds(20, 280, 100, 20);
+        hostTextField = new JTextField();
+        hostTextField.setBounds(140, 280, 150, 20);
+        hostTextField.setText(host);
+        frame.getContentPane().add(hostLabel);
+        frame.getContentPane().add(hostTextField);
+
+        // Input field for the port
+        JLabel portLabel = new JLabel("Port:");
+        portLabel.setBounds(20, 310, 100, 20);
+        portTextField = new JTextField();
+        portTextField.setBounds(140, 310, 150, 20);
+        portTextField.setText(Integer.toString(port));
+        frame.getContentPane().add(portLabel);
+        frame.getContentPane().add(portTextField);
+
         // button to submit request
         JButton submitButton = new JButton();
         submitButton.setText("Submit Request");
@@ -221,6 +249,17 @@ public class Client
 		String request;
 		boolean isValid = false;
 		errorLabel.setText("");
+
+		if (isInteger(portTextField.getText()))
+		{
+			port = Integer.parseInt(portTextField.getText());
+		}
+		else
+		{
+			errorLabel.setText("Please enter a valid port");
+			return;
+		}
+		host = hostTextField.getText();
 
 		// SUBMIT request
 		if (optionSubmit.isSelected())
@@ -327,14 +366,13 @@ public class Client
 
 		try 
 		{
-			host = InetAddress.getLocalHost().getHostAddress();
 			socket = new Socket(host, port);
 			out = new PrintWriter(socket.getOutputStream(), true);
 			in = new Scanner(socket.getInputStream());
 
 			// send the request to the server
 			out.println(request + "\nSTOP");
-			System.out.println("Submitting request" + request);
+			System.out.println("Submitting request\n" + request);
 			
 
 			// get the response from the server
@@ -345,18 +383,28 @@ public class Client
 				if (temp.trim().equals("SUCCESS"))
 				{
 					errorLabel.setText("Server processed request successfully!");
+					System.out.println("Server processed request successfully!");
 					System.out.println("Ending connection");
 
-					if (bibtexOption.isSelected())
+					if (optionGet.isSelected())
 					{
-						openGetResponseBibtex(fromServer);
-					}
-					else
-					{
-						openGetResponse(fromServer);
+						if (bibtexOption.isSelected())
+						{
+							openGetResponseBibtex(fromServer);
+						}
+						else
+						{
+							openGetResponse(fromServer);
+						}
 					}
 
 					break;
+				}
+				else if (temp.trim().equals("FAILURE"))
+				{
+					errorLabel.setText("Server returned: invalid request!");
+					System.out.println("Server returned: invalid request!");
+					System.out.println("Ending connection");
 				}
 				else
 				{
@@ -370,11 +418,11 @@ public class Client
 		} 
 		catch (UnknownHostException e) 
 		{
-			errorLabel.setText("Connection error. Check your internet or try a different port.");
+			errorLabel.setText("Connection error. Check your internet and the selected host and port");
 		} 
 		catch (IOException e) 
 		{
-			errorLabel.setText("Connection error. Check your internet or try a different port.");
+			errorLabel.setText("Connection error. Check your internet and the selected host and port");
 		}
 	}
 

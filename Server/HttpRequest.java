@@ -93,8 +93,6 @@ private void processRequest() throws Exception
 				throw new IllegalArgumentException("Must be in format \"ISBN nnnnn\"");
 			}
 		}
-		
-		out.println("SUCCESS");
 		input.close();
 		out.close();
 		socket.close();
@@ -132,8 +130,12 @@ private void processRequest() throws Exception
 	  String requestLine = input.nextLine();
 	  while (!requestLine.equals("STOP")) {
 		  String[] tokens = requestLine.split(" ");
-		  if (tokens.length == 2)
-			  book.fields.put(tokens[0], tokens[1]);
+		  if (tokens.length >= 2) {
+			  StringBuilder sb = new StringBuilder();
+			  for(int i = 1; i < tokens.length; i++)
+				  sb.append(tokens[i] + " ");
+			  book.fields.put(tokens[0], sb.toString().trim());
+		  }
 		  else
 			  throw new IllegalArgumentException("The body of your submit request is formatted incorrectly");
 		  requestLine = input.nextLine();

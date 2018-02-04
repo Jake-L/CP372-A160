@@ -12,13 +12,36 @@ public final class Server
 		// Get the port number from the command line.
 		int port;
 		if (argv.length > 0)
-			port = Integer.valueOf(argv[0]);
+		{
+			try
+			{
+				port = Integer.valueOf(argv[0]);
+			}
+			catch (NumberFormatException e)
+			{
+				System.out.println("User entered port not valid, defaulting to 5555");
+				port = 5555;
+			}
+		}
 		else
+		{
+			System.out.println("No port entered by user, defaulting to 5555");
 			port = 5555;
+		}
 		ConcurrentHashMap<String,Book> books = new ConcurrentHashMap<String,Book>();
-		// System.out.println(sss.charAt(0));
 		// Establish the listen socket.
-		ServerSocket socket = new ServerSocket(port);
+		ServerSocket socket;
+
+		try
+		{
+			socket = new ServerSocket(port);
+		} 
+		catch (IllegalArgumentException e)
+		{
+			System.out.println("User entered port not valid, defaulting to 5555");
+			port = 5555;
+			socket = new ServerSocket(port);
+		}
 		
 		// Process HTTP service requests in an infinite loop.
 		System.out.println("Starting server");

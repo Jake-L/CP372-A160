@@ -298,7 +298,7 @@ public class Client
 
 			if (isValidIsbn(isbnTextField.getText().trim().replaceAll("\\-","")))
 			{
-				request += "\nISBN " + isbnTextField.getText();
+				request += "\nISBN " + isbnTextField.getText().trim().replaceAll("\\-","");
 				isValid = true;
 			}
 			else

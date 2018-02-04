@@ -161,8 +161,8 @@ private void processRequest() throws Exception
 			  keys.add(tokens[0]);
 			  StringBuilder sb = new StringBuilder();
 			  for(int i = 1; i < tokens.length; i++)
-				  sb.append(tokens[i]);
-			  values.add(sb.toString());
+				  sb.append(tokens[i] + " ");
+			  values.add(sb.toString().trim());
 		  }
 		  requestLine = input.nextLine();
 	  }

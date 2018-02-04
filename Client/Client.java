@@ -408,7 +408,8 @@ public class Client
 				}
 				else
 				{
-					fromServer += temp;
+					fromServer += temp + "\n";
+					System.out.println("Read from server " + temp);
 				}
 			}
 
@@ -429,6 +430,7 @@ public class Client
 	private static void openGetResponse(String r)
 	{
 		JFrame frame = new JFrame("GET Results");
+		System.out.println("OpenGetResponse: " + r);
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.setBounds(500,200,600,400);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -523,11 +525,14 @@ public class Client
         for (int i = 0; i < response.length; i++)
         {
         	String[] tokens = response[i].split(" ");
-        	System.out.println(tokens[0]);
         	if (tokens[0].equals("ISBN"))
         	{
 	        	n++;
 	        }
+	    }
+	    if (response.length > 0 && n == 0)
+	    {
+	    	n = 1;
 	    }
 
         Object[][] data = new Object[n][5];
@@ -536,6 +541,7 @@ public class Client
         for (int i = 0; i < response.length; i++)
         {
         	String[] tokens = response[i].split(" ");
+        	System.out.println(response[i]);
 
         	if (tokens[0].equals("ISBN"))
         	{

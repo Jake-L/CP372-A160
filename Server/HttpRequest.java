@@ -40,7 +40,6 @@ private void processRequest() throws Exception
 		
 		// write to the client
 		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-		out.println("Connection established");
 
 		// Get the request line of the HTTP request message.
 		String operation = input.nextLine();

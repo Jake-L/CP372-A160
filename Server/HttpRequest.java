@@ -52,16 +52,16 @@ private void processRequest() throws Exception
 			String result = "";
 			for(String key:this.books.keySet())
 				result += this.books.get(key).toString();
-			out.println(result + "\nSUCCESS");
+			out.println(result + "SUCCESS");
 		}
 		else if (operation.equals("GET")) {
 			ArrayList<Book> books = getMatchingBooks(input);
 			StringBuilder result = new StringBuilder();
 			for (Book book: books) {
-				result.append(book.toString() + "\n");
+				result.append(book.toString());
 			}
-			System.out.println(result.toString() + "SUCCESS");
-			out.println(result.toString() + "SUCCESS");
+			System.out.print(result.toString() + "SUCCESS");
+			out.print(result.toString() + "SUCCESS");
 		}
 		else if (operation.equals("SUBMIT")) {
 			String[] isbn = input.nextLine().split(" ");

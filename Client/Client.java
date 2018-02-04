@@ -372,14 +372,14 @@ public class Client
 
 			// send the request to the server
 			out.println(request + "\nSTOP");
-			System.out.println("Submitting request\n" + request);
+			System.out.println("Submitting request:\n" + request);
 			
 
 			// get the response from the server
 			while (in.hasNextLine()) 
 			{
 				String temp = in.nextLine();
-				System.out.println(temp);
+				System.out.println("Read from server :" + temp);
 				if (temp.trim().equals("SUCCESS"))
 				{
 					errorLabel.setText("Server processed request successfully!");
@@ -409,7 +409,6 @@ public class Client
 				else
 				{
 					fromServer += temp + "\n";
-					System.out.println("Read from server " + temp);
 				}
 			}
 
@@ -550,23 +549,23 @@ public class Client
 	        		n++;
 	        	}
 
-	        	data[n][0] = tokens[1];
+	        	data[n][0] = response[i].substring(tokens[0].length() + 1);
         	}
         	else if (tokens[0].equals("TITLE"))
         	{
-        		data[n][1] = tokens[1];
+        		data[n][1] = response[i].substring(tokens[0].length() + 1);
         	}
         	else if (tokens[0].equals("AUTHOR"))
         	{
-        		data[n][2] = tokens[1];
+        		data[n][2] = response[i].substring(tokens[0].length() + 1);
         	}
         	else if (tokens[0].equals("PUBLISHER"))
         	{
-        		data[n][3] = tokens[1];
+        		data[n][3] = response[i].substring(tokens[0].length() + 1);
         	}
         	else if (tokens[0].equals("YEAR"))
         	{
-        		data[n][4] = tokens[1];
+        		data[n][4] = response[i].substring(tokens[0].length() + 1);
         	}
         }
 

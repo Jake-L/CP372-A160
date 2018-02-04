@@ -10,7 +10,11 @@ public final class Server
 	public static void main(String argv[]) throws Exception 
 	{
 		// Get the port number from the command line.
-		int port = 5555;// new Integer(argv[0]).intValue();
+		int port;
+		if (argv.length > 0)
+			port = Integer.valueOf(argv[0]);
+		else
+			port = 5555;
 		ConcurrentHashMap<String,Book> books = new ConcurrentHashMap<String,Book>();
 		// System.out.println(sss.charAt(0));
 		// Establish the listen socket.

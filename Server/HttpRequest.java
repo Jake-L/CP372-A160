@@ -46,48 +46,51 @@ private void processRequest() throws Exception
 		
 		System.out.println("Operation: " + operation);
 		
-		String requestLine = input.nextLine();
 		
 		if (operation.equals("GET ALL")) {
 			String result = "";
 			for(String key:this.books.keySet())
 				result += this.books.get(key).toString();
-			out.println(result + "\nSUCCESS");
+			out.println(result + "SUCCESS");
 		}
 		else if (operation.equals("GET")) {
-			String[] isbn = requestLine.split(" ");
-			if (isbn.length == 2)
-				out.println(this.books.get(isbn[1]).toString() + "\nSUCCESS");
-			else 
-				throw new IllegalArgumentException("Must be in format \"ISBN nnnnn\"");
+			ArrayList<Book> books = getMatchingBooks(input);
+			StringBuilder result = new StringBuilder();
+			for (Book book: books) {
+				result.append(book.toString());
+			}
+			System.out.print(result.toString() + "SUCCESS");
+			out.print(result.toString() + "SUCCESS");
 		}
 		else if (operation.equals("SUBMIT")) {
-			String[] isbn = requestLine.split(" ");
+			String[] isbn = input.nextLine().split(" ");
 			if (isbn.length == 2) {
 				Book book = addOrUpdateFields(new Book(),input);
 				this.books.put(isbn[1],book);
 				out.println("SUCCESS");
 			}
-			else
+			else {
+				out.println("FAILURE");
 				throw new IllegalArgumentException("Must be in format \"ISBN nnnnn\"");
+			}
 		}
 		else if (operation.equals("REMOVE")) {
-			String[] isbn = requestLine.split(" ");
-			if (isbn.length == 2) {
-				this.books.remove(isbn[1]);
-				out.println("SUCCESS");
+			ArrayList<Book> books = getMatchingBooks(input);
+			for (Book book: books) {
+				this.books.remove(book.fields.get("ISBN"));
 			}
-			else 
-				throw new IllegalArgumentException("Must be in format \"ISBN nnnnn\"");
+			out.println("SUCCESS");
 		}
 		else if (operation.equals("UPDATE")) {
-			String[] isbn = requestLine.split(" ");
+			String[] isbn = input.nextLine().split(" ");
 			if (isbn.length == 2) {
 				this.books.put(isbn[1],addOrUpdateFields(this.books.get(isbn[1]),input));
 				out.println("SUCCESS");
 			}
-			else
+			else {
+				out.println("FAILURE");
 				throw new IllegalArgumentException("Must be in format \"ISBN nnnnn\"");
+			}
 		}
 		
 		out.println("SUCCESS");
@@ -135,6 +138,37 @@ private void processRequest() throws Exception
 		  requestLine = input.nextLine();
 	  }
 	  return book;
+  }
+  
+  private ArrayList<Book> getMatchingBooks(Scanner input) {
+	  String requestLine = input.nextLine();
+	  ArrayList<Book> result = new ArrayList<Book>();
+	  ArrayList<String> keys = new ArrayList<String>(); 
+	  ArrayList<String> values = new ArrayList<String>();
+	  
+	  if (requestLine.split(" ")[0] == "ISBN") {
+		  String isbn = requestLine.split(" ")[1];
+		  result.add(books.get(isbn));
+		  return result;
+	  }
+	  
+	  while (!requestLine.equals("STOP")) {
+		  String[] tokens = requestLine.split(" ");
+		  if (tokens.length >= 2) {
+			  keys.add(tokens[0]);
+			  StringBuilder sb = new StringBuilder();
+			  for(int i = 1; i < tokens.length; i++)
+				  sb.append(tokens[i]);
+			  values.add(sb.toString());
+		  }
+		  requestLine = input.nextLine();
+	  }
+	  for(String key:this.books.keySet()) {
+		  Book book = this.books.get(key);
+		  if (book.matchesFields(keys, values))
+			  result.add(book);
+	  }
+	  return result;
   }
 }
 

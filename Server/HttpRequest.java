@@ -60,7 +60,7 @@ private void processRequest() throws Exception
 				result.append(book.toString());
 			}
 			System.out.print(result.toString() + "SUCCESS");
-			out.print(result.toString() + "SUCCESS");
+			out.println(result.toString() + "SUCCESS");
 		}
 		else if (operation.equals("SUBMIT")) {
 			String[] isbn = input.nextLine().split(" ");

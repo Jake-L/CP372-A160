@@ -67,6 +67,7 @@ private void processRequest() throws Exception
 			String[] isbn = input.nextLine().split(" ");
 			if (isbn.length == 2) {
 				Book book = addOrUpdateFields(new Book(),input);
+				book.fields.put("ISBN",isbn[1]);
 				this.books.put(isbn[1],book);
 				out.println("SUCCESS");
 			}
